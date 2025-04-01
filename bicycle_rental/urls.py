@@ -29,6 +29,11 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("return/<int:rental_id>/", views.return_bicycle, name="return_bicycle"),
     path("feedback/<int:rental_id>/", views.submit_feedback, name="submit_feedback"),
+    path(
+        "payment/<int:bicycle_id>/<int:duration>/",
+        views.payment_confirm,
+        name="payment_confirm",
+    ),  # New route
 ]
 
 # from django.contrib import admin

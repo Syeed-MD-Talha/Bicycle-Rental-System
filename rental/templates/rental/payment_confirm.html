@@ -1,0 +1,14 @@
+{% extends "rental/base.html" %}
+
+{% block content %}
+<h2>Confirm Payment</h2>
+<p><strong>Bicycle:</strong> {{ bicycle.bicycle_id }} ({{ bicycle.type }})</p>
+<p><strong>Duration:</strong> {{ duration }} hours</p>
+<p><strong>Total Cost:</strong> ${{ cost }}</p>
+<form method="post" action="{% url 'rent_bicycle' bicycle.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="duration" value="{{ duration }}">
+    <button type="submit">Confirm Payment</button>
+</form>
+<p><a href="{% url 'bicycle_list' %}">Cancel</a></p>
+{% endblock %}

@@ -14,7 +14,7 @@ class Bicycle(models.Model):
         rentals = self.rental_set.filter(rating__isnull=False)
         if rentals.exists():
             avg = rentals.aggregate(models.Avg("rating"))["rating__avg"]
-            return round(avg, 1)  # Round to 1 decimal place
+            return round(avg, 1)
         return None
 
     def feedback_count(self):
@@ -32,6 +32,9 @@ class Rental(models.Model):
         null=True, blank=True, choices=[(i, i) for i in range(1, 6)]
     )
     review = models.TextField(null=True, blank=True)
+    transaction_id = models.CharField(
+        max_length=12, null=True, blank=True, unique=True
+    )  # Fake transaction ID
 
     def __str__(self):
         return f"{self.user.username} rented {self.bicycle}"

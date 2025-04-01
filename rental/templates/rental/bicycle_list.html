@@ -16,8 +16,9 @@
         No reviews yet
         {% endif %}
     </p>
-    <form method="post" action="{% url 'rent_bicycle' bicycle.id %}">
+    <form method="post" action="{% url 'bicycle_list' %}">
         {% csrf_token %}
+        <input type="hidden" name="bicycle_id" value="{{ bicycle.id }}">
         <input type="hidden" name="duration" value="3">
         <button type="submit">Pay and Rent</button>
     </form>

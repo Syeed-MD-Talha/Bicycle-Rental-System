@@ -10,6 +10,7 @@
         <th style="border: 1px solid #ddd; padding: 8px;">Type</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Duration (hours)</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Cost</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Transaction ID</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Status</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Action</th>
         <th style="border: 1px solid #ddd; padding: 8px;">Feedback</th>
@@ -20,6 +21,7 @@
         <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.bicycle.type }}</td>
         <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.duration }}</td>
         <td style="border: 1px solid #ddd; padding: 8px;">${{ rental.cost }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.transaction_id }}</td>
         <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.bicycle.status }}</td>
         <td style="border: 1px solid #ddd; padding: 8px;">
             {% if rental.end_time is null and rental.bicycle.status == "booked" %}
