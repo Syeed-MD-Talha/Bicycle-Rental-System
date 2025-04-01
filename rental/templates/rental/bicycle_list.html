@@ -1,0 +1,27 @@
+{% extends "rental/base.html" %}
+
+{% block content %}
+<h2>Available Bicycles</h2>
+{% for bicycle in bicycles %}
+{% if bicycle.status == "available" %}
+<div class="bicycle">
+    <p><strong>ID:</strong> {{ bicycle.bicycle_id }}</p>
+    <p><strong>Type:</strong> {{ bicycle.type }}</p>
+    <p><strong>Status:</strong> {{ bicycle.status }}</p>
+    <p><strong>Cost:</strong> ${{ bicycle.temp_cost }} for 3 hours</p>
+    <p><strong>Rating:</strong>
+        {% if bicycle.avg_rating %}
+        {{ bicycle.avg_rating }} stars ({{ bicycle.feedback_count }} reviews)
+        {% else %}
+        No reviews yet
+        {% endif %}
+    </p>
+    <form method="post" action="{% url 'rent_bicycle' bicycle.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="duration" value="3">
+        <button type="submit">Pay and Rent</button>
+    </form>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}

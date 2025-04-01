@@ -1,0 +1,49 @@
+{% extends "rental/base.html" %}
+
+{% block content %}
+<h2>Your Dashboard, {{ user.username }}</h2>
+<h3>Your Rentals</h3>
+{% if rentals %}
+<table style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <th style="border: 1px solid #ddd; padding: 8px;">Bicycle ID</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Type</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Duration (hours)</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Cost</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Status</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Action</th>
+        <th style="border: 1px solid #ddd; padding: 8px;">Feedback</th>
+    </tr>
+    {% for rental in rentals %}
+    <tr>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.bicycle.bicycle_id }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.bicycle.type }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.duration }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">${{ rental.cost }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">{{ rental.bicycle.status }}</td>
+        <td style="border: 1px solid #ddd; padding: 8px;">
+            {% if rental.end_time is null and rental.bicycle.status == "booked" %}
+            <form method="post" action="{% url 'return_bicycle' rental.id %}">
+                {% csrf_token %}
+                <button type="submit">Return</button>
+            </form>
+            {% else %}
+            Returned
+            {% endif %}
+        </td>
+        <td style="border: 1px solid #ddd; padding: 8px;">
+            {% if rental.end_time and not rental.rating %}
+            <a href="{% url 'submit_feedback' rental.id %}">Leave Feedback</a>
+            {% elif rental.rating %}
+            {{ rental.rating }} stars{% if rental.review %}: {{ rental.review }}{% endif %}
+            {% else %}
+            N/A
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>You have no rentals yet. <a href="{% url 'bicycle_list' %}">Rent a bicycle now!</a></p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "rental/base.html" %}
+
+{% block content %}
+<h2>Feedback for Rental: {{ rental.bicycle.bicycle_id }}</h2>
+<p>Bicycle: {{ rental.bicycle.type }} | Duration: {{ rental.duration }} hours | Cost: ${{ rental.cost }}</p>
+<form method="post"
+    style="max-width: 400px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit Feedback</button>
+</form>
+<p style="margin-top: 10px;"><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+{% endblock %}
