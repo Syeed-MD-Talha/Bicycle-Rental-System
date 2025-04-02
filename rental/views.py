@@ -8,6 +8,10 @@ from .patterns import RentalFacade, BicycleUnlockProxy, UserObserver, AdminObser
 from .forms import FeedbackForm
 
 
+def home(request):
+    return render(request, "rental/home.html")
+
+
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -34,7 +38,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("bicycle_list")
+    return redirect("home")
 
 
 @login_required
@@ -48,8 +52,7 @@ def bicycle_list(request):
         bicycle_id = request.POST.get("bicycle_id")
         duration = int(request.POST.get("duration", 3))
         bicycle = Bicycle.objects.get(id=bicycle_id)
-        cost = duration * 2  # Using HourlyPricing logic
-        # Redirect to payment confirmation page
+        cost = duration * 2
         return redirect("payment_confirm", bicycle_id=bicycle.id, duration=duration)
     return render(request, "rental/bicycle_list.html", {"bicycles": bicycles})
 
@@ -57,7 +60,7 @@ def bicycle_list(request):
 @login_required
 def payment_confirm(request, bicycle_id, duration):
     bicycle = Bicycle.objects.get(id=bicycle_id)
-    cost = duration * 2  # Calculate cost
+    cost = duration * 2
     if request.method == "POST":
         return redirect("rent_bicycle", bicycle_id=bicycle.id)
     return render(

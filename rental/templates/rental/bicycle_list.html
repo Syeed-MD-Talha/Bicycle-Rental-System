@@ -514,7 +514,10 @@
             {% if bicycle.status == "available" %}
             <div class="bicycle-card">
                 <div class="bicycle-img">
-                    <img src="/api/placeholder/400/180" alt="{{ bicycle.type }} Bicycle">
+                    {% if bicycle.image %}
+                    <img src="{{ bicycle.image.url }}" style="height: auto; border-radius: 5px;"
+                        alt="{{ bicycle.bicycle_id }}">
+                    {% endif %}
                     <div class="bicycle-type-badge">{{ bicycle.type }}</div>
                 </div>
                 <div class="bicycle-content">
