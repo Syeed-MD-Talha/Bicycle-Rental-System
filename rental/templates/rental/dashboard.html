@@ -366,65 +366,6 @@
             gap: 8px;
         }
 
-        /* Feedback Form Styling */
-        .feedback-form {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 20px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .star-rating {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            cursor: pointer;
-            font-size: 24px;
-            color: #d1d5db;
-        }
-
-        .star-rating input:checked~label {
-            color: var(--accent-color);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #d1d5db;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
         /* Responsive Adjustments */
         @media (max-width: 1200px) {
             .stats-container {
@@ -503,16 +444,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <div class="top-bar">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search...">
-            </div>
-            <div class="top-right">
-                <div class="icon-btn"><i class="fas fa-bell"></i></div>
-                <div class="icon-btn"><i class="fas fa-question-circle"></i></div>
-            </div>
-        </div>
+
 
         <h1>Welcome, {{ user.username }}</h1>
         <p style="margin-bottom: 30px;">Here's an overview of your bicycle rentals</p>
@@ -617,7 +549,7 @@
                                 <a href="{% url 'submit_feedback' rental.id %}" class="btn btn-primary">Rate</a>
                                 {% endif %}
 
-                                <button class="btn btn-danger">
+                                <button class="btn btn-danger" title="View location on map">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </button>
                             </div>
@@ -636,18 +568,23 @@
             {% endif %}
         </div>
 
-        <!-- Rental History Chart (Static Placeholder) -->
+        <!-- Map Section -->
         <div class="section-header">
-            <h2 class="section-title">Rental Activity</h2>
+            <h2 class="section-title">Rental Location Map</h2>
+            <p class="section-subtitle" style="color: var(--text-light); margin-top: 5px;">View the location of your
+                rented property</p>
         </div>
-        <div class="table-container"
-            style="padding: 20px; height: 250px; display: flex; align-items: center; justify-content: center;">
-            <p style="color: var(--text-light);">Interactive chart will be displayed here</p>
+        <div class="table-container" style="padding: 0; height: 400px; overflow: hidden;">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3652.8003969256433!2d90.40423787591932!3d23.71882098998678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sbangshal%20cycle%20market!5e0!3m2!1sen!2sbd!4v1743586967967!5m2!1sen!2sbd"
+                width="100%" height="100%" style="border:0; display: block;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
         </div>
     </div>
 
     <script>
-        // This is just to enable interaction with the stars on the page for demo purposes
+        // Star rating interaction for the review form
         document.addEventListener('DOMContentLoaded', function () {
             const stars = document.querySelectorAll('.star-rating label');
             stars.forEach(star => {

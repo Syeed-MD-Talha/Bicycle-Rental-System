@@ -562,17 +562,37 @@
                     </div>
 
                     <div class="bicycle-price">
-                        ${{ bicycle.temp_cost }} <span class="price-period">for 3 hours</span>
+                        <span class="price-period">Price per hour:</span>
+                        ${{ bicycle.price_per_hour }}
                     </div>
 
+
                     <div class="bicycle-actions">
-                        <form method="post" action="{% url 'bicycle_list' %}" style="width: 100%;">
+                        <form method="post" action="{% url 'bicycle_list' %}"
+                            style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
                             {% csrf_token %}
                             <input type="hidden" name="bicycle_id" value="{{ bicycle.id }}">
-                            <input type="hidden" name="duration" value="3">
+                            <div class="duration-selector" style="display: flex; align-items: center; gap: 10px;">
+                                <label for="duration_{{ bicycle.id }}"
+                                    style="font-size: 14px; color: var(--text-light);">Rent for:</label>
+                                <select name="duration" id="duration_{{ bicycle.id }}"
+                                    style="flex: 1; padding: 8px; border-radius: var(--border-radius); border: 1px solid #e0e6ed;">
+                                    <option value="1">1 hour</option>
+                                    <option value="2">2 hours</option>
+                                    <option value="3" selected>3 hours</option>
+                                    <option value="4">4 hours</option>
+                                    <option value="5">5 hours</option>
+                                    <option value="6">6 hours</option>
+                                    <option value="7">7 hours</option>
+                                    <option value="8">8 hours</option>
+                                    <option value="9">9 hours</option>
+                                    <option value="10">10 hours</option>
+                                    <option value="11">11 hours</option>
+                                    <option value="12">12 hours</option>
+                                </select>
+                            </div>
                             <button type="submit" class="btn btn-primary">Pay and Rent</button>
                         </form>
-                        <button class="btn btn-outline">Details</button>
                     </div>
                 </div>
             </div>

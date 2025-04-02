@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -45,14 +45,12 @@ def logout_view(request):
 def bicycle_list(request):
     bicycles = Bicycle.objects.all()
     for bicycle in bicycles:
-        bicycle.temp_cost = 3 * 2
         bicycle.avg_rating = bicycle.average_rating()
         bicycle.feedback_count = bicycle.feedback_count()
     if request.method == "POST":
         bicycle_id = request.POST.get("bicycle_id")
-        duration = int(request.POST.get("duration", 3))
+        duration = int(request.POST.get("duration"))
         bicycle = Bicycle.objects.get(id=bicycle_id)
-        cost = duration * 2
         return redirect("payment_confirm", bicycle_id=bicycle.id, duration=duration)
     return render(request, "rental/bicycle_list.html", {"bicycles": bicycles})
 
@@ -60,13 +58,18 @@ def bicycle_list(request):
 @login_required
 def payment_confirm(request, bicycle_id, duration):
     bicycle = Bicycle.objects.get(id=bicycle_id)
-    cost = duration * 2
+    cost = duration * bicycle.price_per_hour  # Use bicycle-specific price
     if request.method == "POST":
         return redirect("rent_bicycle", bicycle_id=bicycle.id)
     return render(
         request,
         "rental/payment_confirm.html",
-        {"bicycle": bicycle, "duration": duration, "cost": cost},
+        {
+            "bicycle": bicycle,
+            "duration": duration,
+            "cost": cost,
+            "price_per_hour": bicycle.price_per_hour,
+        },
     )
 
 
@@ -74,7 +77,7 @@ def payment_confirm(request, bicycle_id, duration):
 def rent_bicycle(request, bicycle_id):
     if request.method == "POST":
         bicycle = Bicycle.objects.get(id=bicycle_id)
-        duration = int(request.POST.get("duration", 3))
+        duration = int(request.POST.get("duration"))
         user = request.user
 
         facade = RentalFacade()
@@ -113,7 +116,7 @@ def return_bicycle(request, rental_id):
 
 @login_required
 def submit_feedback(request, rental_id):
-    rental = Rental.objects.get(id=rental_id, user=request.user)
+    rental = get_object_or_404(Rental, id=rental_id, user=request.user)
     if rental.end_time is None:
         return HttpResponse(
             "Please return the bicycle before leaving feedback", status=400

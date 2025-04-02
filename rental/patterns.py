@@ -4,7 +4,7 @@ import random
 import string
 
 
-# Observer Pattern (updated)
+# Observer Pattern
 class BicycleObserver(ABC):
     @abstractmethod
     def update(self, bicycle):
@@ -51,24 +51,24 @@ class BicycleSubject:
                 observer.payment_notification(rental)
 
 
-# Strategy Pattern (unchanged)
+# Strategy Pattern (updated)
 class PricingStrategy(ABC):
     @abstractmethod
-    def calculate_cost(self, duration):
+    def calculate_cost(self, bicycle, duration):
         pass
 
 
 class HourlyPricing(PricingStrategy):
-    def calculate_cost(self, duration):
-        return duration * 2  # $2/hour
+    def calculate_cost(self, bicycle, duration):
+        return bicycle.price_per_hour * duration  # Use bicycle-specific price
 
 
 class FlatPricing(PricingStrategy):
-    def calculate_cost(self, duration):
-        return 10  # Flat $10
+    def calculate_cost(self, bicycle, duration):
+        return 10  # Flat $10 (could also be made configurable)
 
 
-# Singleton Pattern (unchanged)
+# Singleton Pattern
 class AdminManager:
     _instance = None
 
@@ -87,7 +87,7 @@ class AdminManager:
         print(f"Admin {action} bicycle {bicycle}")
 
 
-# Factory Pattern (unchanged)
+# Factory Pattern
 class BicycleFactory:
     @staticmethod
     def create_bicycle(bicycle_type, bicycle_id):
@@ -96,18 +96,16 @@ class BicycleFactory:
         return Bicycle.objects.create(bicycle_id=bicycle_id, type=bicycle_type)
 
 
-# Dummy Payment System with Transaction ID
+# Dummy Payment System
 class DummyPaymentProcessor:
     @staticmethod
     def generate_transaction_id():
-        # Generate a 12-character fake transaction ID (e.g., "TXN123ABC456")
         return "TXN" + "".join(
             random.choices(string.ascii_uppercase + string.digits, k=9)
         )
 
     @staticmethod
     def process_payment(user, amount):
-        # Simulate a successful payment (no real transaction)
         transaction_id = DummyPaymentProcessor.generate_transaction_id()
         print(
             f"Simulated payment of ${amount} by {user.username} completed. Transaction ID: {transaction_id}"
@@ -124,9 +122,13 @@ class RentalFacade:
         self.payment_processor = DummyPaymentProcessor()
 
     def rent_bicycle(self, user, bicycle, duration):
+        # Set a reasonable maximum duration of 24 hours
+        MAX_DURATION = 24
+        if duration > MAX_DURATION:
+            raise ValueError(f"Duration exceeds max allowed ({MAX_DURATION} hours)")
         bicycle.status = "booked"
         bicycle.save()
-        cost = self.pricing.calculate_cost(duration)
+        cost = self.pricing.calculate_cost(bicycle, duration)
         transaction_id = self.payment_processor.process_payment(user, cost)
         self.admin.approve_rental(bicycle)
         from .models import Rental
@@ -151,7 +153,7 @@ class RentalFacade:
         self.subject.notify(rental.bicycle)
 
 
-# Proxy Pattern (unchanged)
+# Proxy Pattern
 class BicycleUnlockProxy:
     def __init__(self, bicycle, user, amount):
         self.bicycle = bicycle

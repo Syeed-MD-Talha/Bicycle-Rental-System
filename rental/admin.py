@@ -9,11 +9,18 @@ class BicycleAdmin(admin.ModelAdmin):
         "bicycle_id",
         "type",
         "status",
+        "price_per_hour",
         "image_thumbnail",
-    )  # Add image thumbnail
+    )  # Add price_per_hour
     list_filter = ("status", "type")
     search_fields = ("bicycle_id",)
-    fields = ("bicycle_id", "type", "status", "image")  # Fields in the edit form
+    fields = (
+        "bicycle_id",
+        "type",
+        "status",
+        "price_per_hour",
+        "image",
+    )  # Include in form
 
     def image_thumbnail(self, obj):
         if obj.image:
@@ -27,7 +34,7 @@ class BicycleAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         admin_manager = AdminManager()
         super().save_model(request, obj, form, change)
-        if not change:  # New bicycle
+        if not change:
             admin_manager.manage_bicycle("added", obj)
 
     def delete_model(self, request, obj):
