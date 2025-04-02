@@ -801,3 +801,26 @@
 </body>
 
 </html>
+
+
+
+<div class="sidebar-menu">
+    <ul>
+        <li class="active"><a href="{% url 'home' %}"><i class="fas fa-home"></i>
+                <span>Home</span></a></li>
+        <li><a href="{% url 'bicycle_list' %}"><i class="fas fa-bicycle"></i> <span>Rent a
+                    Bicycle</span></a>
+        </li>
+        <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+        </li>
+        <li><a href="/admin"><i class="fas fa-user-shield"></i> <span>Admin</span></a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+        {% else %}
+        <li><a href="{% url 'login' %}" class="hero-btn hero-btn-primary">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a></li>
+        {% endif %}
+
+    </ul>
+</div>

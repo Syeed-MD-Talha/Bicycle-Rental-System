@@ -463,16 +463,22 @@
         </div>
         <div class="sidebar-menu">
             <ul>
-                <li><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>
-                        <span>Dashboard</span></a></li>
+                <li><a href="{% url 'home' %}"><i class="fas fa-home"></i>
+                        <span>Home</span></a></li>
                 <li class="active"><a href="{% url 'bicycle_list' %}"><i class="fas fa-bicycle"></i> <span>Rent a
                             Bicycle</span></a>
                 </li>
-                <li><a href="#"><i class="fas fa-history"></i> <span>Rental History</span></a></li>
-                <li><a href="#"><i class="fas fa-star"></i> <span>My Feedback</span></a></li>
-                <li><a href="#"><i class="fas fa-bell"></i> <span>Notifications</span></a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+                </li>
+                <li><a href="/admin"><i class="fas fa-user-shield"></i> <span>Admin</span></a></li>
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="hero-btn hero-btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a></li>
+                {% endif %}
+
             </ul>
         </div>
         <div class="user-profile">

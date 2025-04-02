@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from .models import Bicycle, Rental
 from .patterns import RentalFacade, BicycleUnlockProxy, UserObserver, AdminObserver
 from .forms import FeedbackForm
+from django.db.models import Sum, Avg, Count  # Import for aggregation
 
 
 def home(request):
@@ -58,7 +59,7 @@ def bicycle_list(request):
 @login_required
 def payment_confirm(request, bicycle_id, duration):
     bicycle = Bicycle.objects.get(id=bicycle_id)
-    cost = duration * bicycle.price_per_hour  # Use bicycle-specific price
+    cost = duration * bicycle.price_per_hour
     if request.method == "POST":
         return redirect("rent_bicycle", bicycle_id=bicycle.id)
     return render(
@@ -96,7 +97,34 @@ def rent_bicycle(request, bicycle_id):
 def dashboard(request):
     user = request.user
     rentals = Rental.objects.filter(user=user).order_by("-start_time")
-    return render(request, "rental/dashboard.html", {"rentals": rentals})
+
+    # Calculate real stats
+    active_rentals_count = rentals.filter(end_time__isnull=True).count()
+    completed_rentals_count = rentals.filter(end_time__isnull=False).count()
+    total_cost = rentals.aggregate(total=Sum("cost"))["total"] or 0.00
+    avg_rating = rentals.filter(rating__isnull=False).aggregate(avg=Avg("rating"))[
+        "avg"
+    ]
+
+    # Format avg_rating to one decimal place if it exists
+    if avg_rating is not None:
+        avg_rating = round(avg_rating, 1)
+    else:
+        avg_rating = 0.0  # Default to 0.0 if no ratings
+
+    return render(
+        request,
+        "rental/dashboard.html",
+        {
+            "rentals": rentals,
+            "active_rentals_count": active_rentals_count,
+            "completed_rentals_count": completed_rentals_count,
+            "total_cost": "{:.2f}".format(
+                total_cost
+            ),  # Format as string with 2 decimals
+            "avg_rating": avg_rating,
+        },
+    )
 
 
 @login_required

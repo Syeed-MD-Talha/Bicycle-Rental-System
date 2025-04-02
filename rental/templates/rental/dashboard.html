@@ -425,15 +425,23 @@
         </div>
         <div class="sidebar-menu">
             <ul>
-                <li class="active"><a href="{% url 'dashboard' %}"><i class="fas fa-home"></i>
-                        <span>Dashboard</span></a></li>
-                <li><a href="{% url 'bicycle_list' %}"><i class="fas fa-bicycle"></i> <span>Rent a Bicycle</span></a>
+                <li><a href="{% url 'home' %}"><i class="fas fa-home"></i>
+                        <span>Home</span></a></li>
+                <li><a href="{% url 'bicycle_list' %}"><i class="fas fa-bicycle"></i> <span>Rent a
+                            Bicycle</span></a>
                 </li>
-                <li><a href="#"><i class="fas fa-history"></i> <span>Rental History</span></a></li>
-                <li><a href="#"><i class="fas fa-star"></i> <span>My Feedback</span></a></li>
-                <li><a href="#"><i class="fas fa-bell"></i> <span>Notifications</span></a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+                <li class="active"><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span></a>
+                </li>
+                <li><a href="/admin"><i class="fas fa-user-shield"></i> <span>Admin</span></a></li>
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="hero-btn hero-btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a></li>
+                {% endif %}
+
             </ul>
         </div>
         <div class="user-profile">
@@ -455,7 +463,7 @@
                 <div class="stat-icon blue-bg">
                     <i class="fas fa-bicycle"></i>
                 </div>
-                <div class="stat-value">{{ active_rentals_count|default:2 }}</div>
+                <div class="stat-value">{{ active_rentals_count }}</div>
                 <div class="stat-label">Active Rentals</div>
             </div>
 
@@ -463,7 +471,7 @@
                 <div class="stat-icon green-bg">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <div class="stat-value">{{ completed_rentals_count|default:8 }}</div>
+                <div class="stat-value">{{ completed_rentals_count }}</div>
                 <div class="stat-label">Completed Rentals</div>
             </div>
 
@@ -471,7 +479,7 @@
                 <div class="stat-icon orange-bg">
                     <i class="fas fa-dollar-sign"></i>
                 </div>
-                <div class="stat-value">${{ total_spent|default:"120.50" }}</div>
+                <div class="stat-value">${{ total_cost }}</div>
                 <div class="stat-label">Total Spent</div>
             </div>
 
@@ -479,7 +487,7 @@
                 <div class="stat-icon red-bg">
                     <i class="fas fa-heart"></i>
                 </div>
-                <div class="stat-value">{{ avg_rating|default:"4.7" }}</div>
+                <div class="stat-value">{{ avg_rating }}</div>
                 <div class="stat-label">Average Rating</div>
             </div>
         </div>
