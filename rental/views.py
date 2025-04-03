@@ -7,6 +7,9 @@ from .models import Bicycle, Rental
 from .patterns import RentalFacade, BicycleUnlockProxy, UserObserver, AdminObserver
 from .forms import FeedbackForm
 from django.db.models import Sum, Avg, Count  # Import for aggregation
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
 
 
 def home(request):
@@ -18,6 +21,9 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            # Ensure email is saved
+            user.email = request.POST.get("email")
+            user.save()
             login(request, user)
             return redirect("bicycle_list")
     else:
@@ -87,6 +93,39 @@ def rent_bicycle(request, bicycle_id):
         rental = facade.rent_bicycle(user, bicycle, duration)
         proxy = BicycleUnlockProxy(bicycle, user, rental.cost)
         if proxy.unlock():
+            # Send confirmation email
+            subject = "Bicycle Rental Confirmation"
+            html_message = render_to_string(
+                "rental/email/rental_confirmation.html",
+                {
+                    "user": user,
+                    "bicycle": bicycle,
+                    "rental": rental,
+                    "duration": duration,
+                },
+            )
+            plain_message = f"""
+            Dear {user.username},
+            
+            Your bicycle rental has been confirmed!
+            
+            Bicycle: {bicycle.bicycle_id} ({bicycle.type})
+            Duration: {duration} hours
+            Cost: ${rental.cost}
+            Transaction ID: {rental.transaction_id}
+            
+            Thank you for choosing our service!
+            """
+
+            send_mail(
+                subject,
+                plain_message,
+                settings.DEFAULT_FROM_EMAIL,
+                [user.email],
+                html_message=html_message,
+                fail_silently=False,
+            )
+
             return redirect("bicycle_list")
         else:
             return HttpResponse("Unlock failed", status=400)

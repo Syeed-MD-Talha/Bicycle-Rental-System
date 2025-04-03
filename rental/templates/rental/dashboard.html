@@ -556,10 +556,6 @@
                                 {% elif rental.end_time and not rental.rating %}
                                 <a href="{% url 'submit_feedback' rental.id %}" class="btn btn-primary">Rate</a>
                                 {% endif %}
-
-                                <button class="btn btn-danger" title="View location on map">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </button>
                             </div>
                         </td>
                     </tr>
