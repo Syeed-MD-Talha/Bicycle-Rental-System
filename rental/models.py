@@ -6,6 +6,10 @@ class Bicycle(models.Model):
     bicycle_id = models.CharField(max_length=10, unique=True)
     type = models.CharField(max_length=50)
     status = models.CharField(max_length=20, default="available")
+    image = models.ImageField(upload_to="bicycles/", null=True, blank=True)
+    price_per_hour = models.DecimalField(
+        max_digits=5, decimal_places=2, default=2.00
+    )  # New field
 
     def __str__(self):
         return f"{self.bicycle_id} ({self.type})"
@@ -32,9 +36,7 @@ class Rental(models.Model):
         null=True, blank=True, choices=[(i, i) for i in range(1, 6)]
     )
     review = models.TextField(null=True, blank=True)
-    transaction_id = models.CharField(
-        max_length=12, null=True, blank=True, unique=True
-    )  # Fake transaction ID
+    transaction_id = models.CharField(max_length=12, null=True, blank=True, unique=True)
 
     def __str__(self):
         return f"{self.user.username} rented {self.bicycle}"

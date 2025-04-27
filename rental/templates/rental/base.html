@@ -82,15 +82,17 @@
     <nav>
         {% if user.is_authenticated %}
         <p>Welcome, {{ user.username }}!
-            <a href="{% url 'dashboard' %}">Dashboard</a> |
+            <a href="{% url 'home' %}">Home</a> |
             <a href="{% url 'bicycle_list' %}">Rent a Bicycle</a> |
+            <a href="{% url 'dashboard' %}">Dashboard</a> |
             {% if user.is_superuser %}
             <a href="{% url 'admin:index' %}">Admin Panel</a> |
             {% endif %}
             <a href="{% url 'logout' %}">Logout</a>
         </p>
         {% else %}
-        <p><a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a></p>
+        <p><a href="{% url 'home' %}">Home</a> | <a href="{% url 'login' %}">Login</a> | <a
+                href="{% url 'register' %}">Register</a></p>
         {% endif %}
     </nav>
     {% block content %}
